@@ -3538,7 +3538,7 @@ function Library:CreateWindow(...)
 
                     local mPos = InputService:GetMouseLocation();
 
-                    Cursor.Color = Library.AccentColor;
+                    Cursor.ImageColor3 = Library.AccentColor;
 
                     Cursor.Position = UDim2.new(0, mPos.X, 0, mPos.Y + 36);
 
