@@ -3540,7 +3540,7 @@ function Library:CreateWindow(...)
 
                     Cursor.ImageColor3 = Library.AccentColor;
 
-                    Cursor.Position = UDim2.new(0, mPos.X, 0, mPos.Y);
+                    Cursor.Position = UDim2.new(0, mPos.X, 0, mPos.Y -36);
 
                     RenderStepped:Wait();
                 end;
