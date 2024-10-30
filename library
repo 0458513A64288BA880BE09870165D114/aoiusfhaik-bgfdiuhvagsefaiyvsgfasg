@@ -3520,35 +3520,6 @@ function Library:CreateWindow(...)
         if Toggled then
             -- A bit scuffed, but if we're going from not toggled -> toggled we want to show the frame immediately so that the fade is visible.
             Outer.Visible = true;
-
-            task.spawn(function()
-                -- TODO: add cursor fade?
-                local State = InputService.MouseIconEnabled;
-
-                local Cursor = Instance.new("ImageLabel")
-                Cursor.Size = UDim2.new(0, 17, 0, 17)
-                Cursor.BackgroundTransparency = 1
-                Cursor.Image = "rbxassetid://7205257578"
-                Cursor.Position = UDim2.new(0, 0, 0, 0)
-                Cursor.ZIndex = 696969
-                Cursor.Parent = ScreenGui
-
-                while Toggled and ScreenGui.Parent do
-                    InputService.MouseIconEnabled = false;
-
-                    local mPos = InputService:GetMouseLocation();
-
-                    Cursor.ImageColor3 = Color3.fromRGB(255, 255, 255);
-
-                    Cursor.Position = UDim2.new(0, mPos.X, 0, mPos.Y -36);
-
-                    RenderStepped:Wait();
-                end;
-
-                InputService.MouseIconEnabled = State;
-
-                Cursor:Remove();
-            end);
         end;
 
         for _, Desc in next, Outer:GetDescendants() do
