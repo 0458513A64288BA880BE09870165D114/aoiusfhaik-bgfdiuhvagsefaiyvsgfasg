@@ -3525,8 +3525,6 @@ function Library:CreateWindow(...)
             toggleblur.Enabled = true
             toggleblur.Size = 15
             toggleblur.Parent = game.Lighting
-
-            toggleblur:Remove();
         end;
 
         for _, Desc in next, Outer:GetDescendants() do
