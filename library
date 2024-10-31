@@ -3507,6 +3507,11 @@ function Library:CreateWindow(...)
     local Toggled = false;
     local Fading = false;
 
+    local toggleblur = Instance.new('BlurEffect')
+    toggleblur.Enabled = true
+    toggleblur.Size = 15
+    toggleblur.Parent = game.Lighting
+
     function Library:Toggle()
         if Fading then
             return;
@@ -3516,11 +3521,6 @@ function Library:CreateWindow(...)
         Fading = true;
         Toggled = (not Toggled);
         ModalElement.Modal = Toggled;
-
-        local toggleblur = Instance.new('BlurEffect')
-        toggleblur.Enabled = true
-        toggleblur.Size = 15
-        toggleblur.Parent = game.Lighting
 
         if Toggled then
             Outer.Visible = true;
