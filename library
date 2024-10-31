@@ -3520,6 +3520,13 @@ function Library:CreateWindow(...)
         if Toggled then
             -- A bit scuffed, but if we're going from not toggled -> toggled we want to show the frame immediately so that the fade is visible.
             Outer.Visible = true;
+
+            local toggleblur = Instance.new('BlurEffect')
+            toggleblur.Enabled = true
+            toggleblur.Size = 15
+            toggleblur.Parent = game.Lighting
+
+            toggleblur:Remove();
         end;
 
         for _, Desc in next, Outer:GetDescendants() do
