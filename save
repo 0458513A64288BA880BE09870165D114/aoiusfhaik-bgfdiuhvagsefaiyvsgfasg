@@ -1,7 +1,7 @@
 local httpService = game:GetService('HttpService')
 
 local SaveManager = {} do
-	SaveManager.Folder = 'ThemeManager'
+	SaveManager.Folder = 'elegant.hvh_themes'
 	SaveManager.Ignore = {}
 	SaveManager.Parser = {
 		Toggle = {
