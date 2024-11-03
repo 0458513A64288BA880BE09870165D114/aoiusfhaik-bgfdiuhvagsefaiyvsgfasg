@@ -3507,6 +3507,7 @@ function Library:CreateWindow(...)
     local Toggled = false;
     local Fading = false;
 
+    getgenv().blurBKGRND = true
     local toggleblur = Instance.new('BlurEffect')
     toggleblur.Enabled = true
     toggleblur.Size = 15
@@ -3524,7 +3525,9 @@ function Library:CreateWindow(...)
 
         if Toggled then
             Outer.Visible = true;
-            toggleblur.Enabled = true
+            if getgenv().blurBKGRND then
+                toggleblur.Enabled = true
+            end
         else
             toggleblur.Enabled = false
         end;
