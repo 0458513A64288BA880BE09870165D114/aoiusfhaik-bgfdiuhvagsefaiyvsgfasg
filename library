@@ -1116,7 +1116,7 @@ do
                     Button:Deselect();
                 end;
 
-                KeyPicker.Mode = nil;
+                KeyPicker.Mode = Mode;
 
                 Label.TextColor3 = Library.AccentColor;
                 Library.RegistryMap[Label].Properties.TextColor3 = 'AccentColor';
