@@ -1118,8 +1118,8 @@ do
 
                 KeyPicker.Mode = nil;
 
-                Label.TextColor3 = Library.FontColor;
-                Library.RegistryMap[Label].Properties.TextColor3 = 'FontColor';
+                Label.TextColor3 = Library.AccentColor;
+                Library.RegistryMap[Label].Properties.TextColor3 = 'AccentColor';
 
                 ModeSelectOuter.Visible = false;
             end;
