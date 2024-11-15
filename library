@@ -1116,10 +1116,10 @@ do
                     Button:Deselect();
                 end;
 
-                KeyPicker.Mode = Mode;
+                KeyPicker.Mode = nil;
 
-                Label.TextColor3 = Library.AccentColor;
-                Library.RegistryMap[Label].Properties.TextColor3 = 'AccentColor';
+                Label.TextColor3 = Library.FontColor;
+                Library.RegistryMap[Label].Properties.TextColor3 = 'FontColor';
 
                 ModeSelectOuter.Visible = false;
             end;
