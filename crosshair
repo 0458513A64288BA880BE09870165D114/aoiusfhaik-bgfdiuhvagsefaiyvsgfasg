@@ -1,10 +1,18 @@
+local runservice = game:GetService('RunService')
+local inputservice = game:GetService('UserInputService')
+local tweenservice = game:GetService('TweenService')
+local camera = workspace.CurrentCamera
+
+local last_render = 0
+
+-- Crosshair configuration
 getgenv().crosshair = {
-    enabled = false,
+    enabled = true,
     sticky = false,
     refreshrate = 0,
     mode = 'Mouse',
     attach_to_target = false,
-    smooth_movement = false,
+    smooth_movement = true,
     smoothness_level = 50,
     firsttext = "elegant",
     secondtext = ".hvh",
@@ -25,13 +33,6 @@ getgenv().crosshair = {
     resize_style = Enum.EasingStyle.Circular,
 }
 
-local runservice = game:GetService('RunService')
-local inputservice = game:GetService('UserInputService')
-local tweenservice = game:GetService('TweenService')
-local camera = workspace.CurrentCamera
-
-local last_render = 0
-
 local drawings = {
     crosshair = {},
     text = {
@@ -40,6 +41,7 @@ local drawings = {
     }
 }
 
+-- Initialize text settings for the crosshair
 drawings.text.Text1.Size = 13
 drawings.text.Text1.Font = 2
 drawings.text.Text1.Outline = true
@@ -55,6 +57,7 @@ local currentLines = crosshair.lines
 local currentWidth = crosshair.width
 local target_position = crosshair.position
 
+-- Function to create the crosshair lines
 local function createCrosshairLines()
     for _, line in pairs(drawings.crosshair) do
         line[1]:Remove()
@@ -79,6 +82,7 @@ end
 
 createCrosshairLines()
 
+-- Function to calculate the position based on angle and radius
 function solve(angle, radius)
     return Vector2.new(
         math.sin(math.rad(angle)) * radius,
@@ -86,15 +90,17 @@ function solve(angle, radius)
     )
 end
 
+-- Smooth position calculation function
 local function smoothPosition(current, target, smoothness)
     return current:Lerp(target, math.clamp(smoothness / 500, 0.01, 0.3))
 end
 
+-- Function to update crosshair position
 local function updatePosition()
     if crosshair.attach_to_target and targetPart then
         local targetPosition, onScreen = camera:WorldToViewportPoint(targetPart.Position)
         if onScreen then
-            target_position = Vector2.new(targetPosition.X - (crosshair.width / 2), targetPosition.Y - 60 - (crosshair.width / 2))
+            target_position = Vector2.new(targetPosition.X, targetPosition.Y)
         else
             target_position = camera.ViewportSize / 2
         end
@@ -113,6 +119,7 @@ local function updatePosition()
     end
 end
 
+-- Main loop to update crosshair every frame
 runservice.PostSimulation:Connect(function()
     local _tick = tick()
 
@@ -177,5 +184,51 @@ runservice.PostSimulation:Connect(function()
         end
     end
 end)
+
+-- Function to follow mouse (if crosshair.mode is 'Mouse')
+local function cirFollowMouse()
+    inputservice.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement and crosshair.enabled then
+            local targetX = input.Position.X - (crosshair.radius / 2)
+            local targetY = input.Position.Y - (crosshair.radius / 2)
+
+            if crosshair.smooth_movement then
+                local smoothness = math.clamp(crosshair.smoothness_level / 500, 0.01, 0.3)
+                local tweenInfo = TweenInfo.new(smoothness, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+                -- Create a tween for smooth movement (if enabled)
+                local tween = TweenService:Create(drawings.crosshair[1][2], tweenInfo, {Position = UDim2.new(0, targetX, 0, targetY)})
+                tween:Play()
+            else
+                -- Directly set position (no smooth movement)
+                drawings.crosshair[1][2].Position = UDim2.new(0, targetX, 0, targetY)
+            end
+        end
+    end)
+end
+
+-- Attach crosshair to target part
+local function attachCrosshairToTarget()
+    if crosshair.attach_to_target and targetPart then
+        local targetPosition, onScreen = camera:WorldToViewportPoint(targetPart.Position)
+        if onScreen then
+            local targetX = targetPosition.X - (crosshair.radius / 2)
+            local targetY = targetPosition.Y - 60 - (crosshair.radius / 2)
+
+            if crosshair.smooth_movement then
+                local smoothness = math.clamp(crosshair.smoothness_level / 500, 0.01, 0.3)
+                local tweenInfo = TweenInfo.new(smoothness, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+                -- Create a tween for smooth movement
+                local tween = TweenService:Create(drawings.crosshair[1][2], tweenInfo, {Position = UDim2.new(0, targetX, 0, targetY)})
+                tween:Play()
+            else
+                -- Directly set position
+                drawings.crosshair[1][2].Position = UDim2.new(0, targetX, 0, targetY)
+            end
+        end
+    end
+end
+
+cirFollowMouse()
+attachCrosshairToTarget()
 
 return crosshair
