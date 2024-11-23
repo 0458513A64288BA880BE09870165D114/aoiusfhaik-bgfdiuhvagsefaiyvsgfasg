@@ -1,6 +1,6 @@
 local runservice = game:GetService('RunService')
 local inputservice = game:GetService('UserInputService')
-local tweenservice = game:GetService('TweenService')
+local TweenService = game:GetService('TweenService')
 local camera = workspace.CurrentCamera
 
 local last_render = 0
