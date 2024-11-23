@@ -91,10 +91,10 @@ local function smoothPosition(current, target, smoothness)
 end
 
 local function updatePosition()
-    if crosshair.attach_to_target and crosshair.target_part then
-        local target_position, on_screen = camera:WorldToViewportPoint(crosshair.target_part.Position)
-        if on_screen then
-            target_position = Vector2.new(target_position.X, target_position.Y)
+    if crosshair.attach_to_target and targetPart then
+        local targetPosition, onScreen = camera:WorldToViewportPoint(targetPart.Position)
+        if onScreen then
+            target_position = Vector2.new(targetPosition.X - (crosshair.width / 2), targetPosition.Y - 60 - (crosshair.width / 2))
         else
             target_position = camera.ViewportSize / 2
         end
