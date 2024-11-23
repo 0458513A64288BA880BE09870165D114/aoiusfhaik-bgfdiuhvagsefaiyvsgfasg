@@ -20,6 +20,7 @@ getgenv().crosshair = {
     resize_min = 5,
     resize_max = 50,
     resize_style = Enum.EasingStyle.Circular,
+    followTarget = true,
 }
 
 local runservice = game:GetService('RunService')
@@ -100,6 +101,15 @@ runservice.PostSimulation:Connect(function()
             crosshair.position
         )
 
+        if crosshair.followTarget and targetPart then
+            local targetPosition, onScreen = camera:WorldToViewportPoint(targetPart.Position)
+            if onScreen then
+                local targetX = targetPosition.X
+                local targetY = targetPosition.Y - 60  -- Adjust the Y offset for better placement
+                crosshair.position = UDim2.new(0, targetX, 0, targetY)
+            end
+        end
+
         local text_1 = drawings.text.Text1
         local text_2 = drawings.text.Text2
 
@@ -151,3 +161,4 @@ runservice.PostSimulation:Connect(function()
 end)
 
 return crosshair
+
