@@ -3,6 +3,9 @@ getgenv().crosshair = {
     sticky = false,
     refreshrate = 0,
     mode = 'Mouse',
+    attach_to_target = false,
+    smooth_movement = false,
+    smoothness_level = 50,
     firsttext = "elegant",
     secondtext = ".hvh",
     position = Vector2.new(0, 0),
@@ -50,6 +53,7 @@ drawings.text.Text2.Text = crosshair.secondtext
 
 local currentLines = crosshair.lines
 local currentWidth = crosshair.width
+local target_position = crosshair.position
 
 local function createCrosshairLines()
     for _, line in pairs(drawings.crosshair) do
@@ -62,12 +66,12 @@ local function createCrosshairLines()
         local outline = Drawing.new('Line')
         outline.Color = Color3.new(0, 0, 0)
         outline.Thickness = crosshair.width + 2
-        outline.ZIndex = 1 -- Lower ZIndex for outline
+        outline.ZIndex = 1
 
         local inline = Drawing.new('Line')
         inline.Color = crosshair.color
         inline.Thickness = crosshair.width
-        inline.ZIndex = 2 -- Higher ZIndex for inline
+        inline.ZIndex = 2
 
         drawings.crosshair[idx] = {outline, inline}
     end
@@ -82,6 +86,33 @@ function solve(angle, radius)
     )
 end
 
+local function smoothPosition(current, target, smoothness)
+    return current:Lerp(target, math.clamp(smoothness / 500, 0.01, 0.3))
+end
+
+local function updatePosition()
+    if crosshair.attach_to_target and crosshair.target_part then
+        local target_position, on_screen = camera:WorldToViewportPoint(crosshair.target_part.Position)
+        if on_screen then
+            target_position = Vector2.new(target_position.X, target_position.Y)
+        else
+            target_position = camera.ViewportSize / 2
+        end
+    else
+        target_position = (
+            crosshair.mode == 'Middle' and camera.ViewportSize / 2 or
+            crosshair.mode == 'Mouse' and inputservice:GetMouseLocation() or
+            crosshair.position
+        )
+    end
+
+    if crosshair.smooth_movement then
+        crosshair.position = smoothPosition(crosshair.position, target_position, crosshair.smoothness_level)
+    else
+        crosshair.position = target_position
+    end
+end
+
 runservice.PostSimulation:Connect(function()
     local _tick = tick()
 
@@ -94,12 +125,9 @@ runservice.PostSimulation:Connect(function()
             createCrosshairLines()
         end
 
-        local position = (
-            crosshair.mode == 'Middle' and camera.ViewportSize / 2 or
-            crosshair.mode == 'Mouse' and inputservice:GetMouseLocation() or
-            crosshair.position
-        )
+        updatePosition()
 
+        local position = crosshair.position
         local text_1 = drawings.text.Text1
         local text_2 = drawings.text.Text2
 
@@ -143,8 +171,8 @@ runservice.PostSimulation:Connect(function()
             end
         else
             for idx = 1, crosshair.lines do
-                drawings.crosshair[idx][1].Visible = false
-                drawings.crosshair[idx][2].Visible = false
+                drawings.crosshair[idx][1].Visible = false -- Outline
+                drawings.crosshair[idx][2].Visible = false -- Inline
             end
         end
     end
