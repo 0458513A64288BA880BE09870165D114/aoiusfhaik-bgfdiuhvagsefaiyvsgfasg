@@ -18,7 +18,7 @@ getgenv().crosshair = {
     resize = false,
     resize_speed = 150,
     resize_min = 5,
-    resize_max = 22,
+    resize_max = 50,
 }
 
 local runservice = game:GetService('RunService')
