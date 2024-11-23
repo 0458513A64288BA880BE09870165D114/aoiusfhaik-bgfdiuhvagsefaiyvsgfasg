@@ -1,18 +1,8 @@
-local runservice = game:GetService('RunService')
-local inputservice = game:GetService('UserInputService')
-local TweenService = game:GetService('TweenService')
-local camera = workspace.CurrentCamera
-
-local last_render = 0
-
 getgenv().crosshair = {
     enabled = false,
     sticky = false,
     refreshrate = 0,
     mode = 'Mouse',
-    attach_to_target = false,
-    smooth_movement = false,
-    smoothness_level = 50,
     firsttext = "elegant",
     secondtext = ".hvh",
     position = Vector2.new(0, 0),
@@ -31,6 +21,13 @@ getgenv().crosshair = {
     resize_max = 50,
     resize_style = Enum.EasingStyle.Circular,
 }
+
+local runservice = game:GetService('RunService')
+local inputservice = game:GetService('UserInputService')
+local tweenservice = game:GetService('TweenService')
+local camera = workspace.CurrentCamera
+
+local last_render = 0
 
 local drawings = {
     crosshair = {},
@@ -53,7 +50,6 @@ drawings.text.Text2.Text = crosshair.secondtext
 
 local currentLines = crosshair.lines
 local currentWidth = crosshair.width
-local target_position = crosshair.position
 
 local function createCrosshairLines()
     for _, line in pairs(drawings.crosshair) do
@@ -86,33 +82,6 @@ function solve(angle, radius)
     )
 end
 
-local function smoothPosition(current, target, smoothness)
-    return current:Lerp(target, math.clamp(smoothness / 500, 0.01, 0.3))
-end
-
-local function updatePosition()
-    if crosshair.attach_to_target and targetPart then
-        local targetPosition, onScreen = camera:WorldToViewportPoint(targetPart.Position)
-        if onScreen then
-            target_position = Vector2.new(targetPosition.X, targetPosition.Y)
-        else
-            target_position = camera.ViewportSize / 2
-        end
-    else
-        target_position = (
-            crosshair.mode == 'Middle' and camera.ViewportSize / 2 or
-            crosshair.mode == 'Mouse' and inputservice:GetMouseLocation() or
-            crosshair.position
-        )
-    end
-
-    if crosshair.smooth_movement then
-        crosshair.position = smoothPosition(crosshair.position, target_position, crosshair.smoothness_level)
-    else
-        crosshair.position = target_position
-    end
-end
-
 runservice.PostSimulation:Connect(function()
     local _tick = tick()
 
@@ -125,9 +94,12 @@ runservice.PostSimulation:Connect(function()
             createCrosshairLines()
         end
 
-        updatePosition()
+        local position = (
+            crosshair.mode == 'Middle' and camera.ViewportSize / 2 or
+            crosshair.mode == 'Mouse' and inputservice:GetMouseLocation() or
+            crosshair.position
+        )
 
-        local position = crosshair.position
         local text_1 = drawings.text.Text1
         local text_2 = drawings.text.Text2
 
@@ -171,51 +143,11 @@ runservice.PostSimulation:Connect(function()
             end
         else
             for idx = 1, crosshair.lines do
-                drawings.crosshair[idx][1].Visible = false -- Outline
-                drawings.crosshair[idx][2].Visible = false -- Inline
+                drawings.crosshair[idx][1].Visible = false
+                drawings.crosshair[idx][2].Visible = false
             end
         end
     end
 end)
-
-local function cirFollowMouse()
-    inputservice.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement and crosshair.enabled then
-            local targetX = input.Position.X - (crosshair.radius / 2)
-            local targetY = input.Position.Y - (crosshair.radius / 2)
-
-            if crosshair.smooth_movement then
-                local smoothness = math.clamp(crosshair.smoothness_level / 500, 0.01, 0.3)
-                local tweenInfo = TweenInfo.new(smoothness, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-                local tween = TweenService:Create(drawings.crosshair[1][2], tweenInfo, {Position = UDim2.new(0, targetX, 0, targetY)})
-                tween:Play()
-            else
-                drawings.crosshair[1][2].Position = UDim2.new(0, targetX, 0, targetY)
-            end
-        end
-    end)
-end
-
-local function attachCrosshairToTarget()
-    if crosshair.attach_to_target and targetPart then
-        local targetPosition, onScreen = camera:WorldToViewportPoint(targetPart.Position)
-        if onScreen then
-            local targetX = targetPosition.X - (crosshair.radius / 2)
-            local targetY = targetPosition.Y - 60 - (crosshair.radius / 2)
-
-            if crosshair.smooth_movement then
-                local smoothness = math.clamp(crosshair.smoothness_level / 500, 0.01, 0.3)
-                local tweenInfo = TweenInfo.new(smoothness, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
-                local tween = TweenService:Create(drawings.crosshair[1][2], tweenInfo, {Position = UDim2.new(0, targetX, 0, targetY)})
-                tween:Play()
-            else
-                drawings.crosshair[1][2].Position = UDim2.new(0, targetX, 0, targetY)
-            end
-        end
-    end
-end
-
-cirFollowMouse()
-attachCrosshairToTarget()
 
 return crosshair
