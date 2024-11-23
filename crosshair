@@ -19,6 +19,7 @@ getgenv().crosshair = {
     resize_speed = 150,
     resize_min = 5,
     resize_max = 50,
+    resize_style = Enum.EasingStyle.Circular,
 }
 
 local runservice = game:GetService('RunService')
@@ -47,13 +48,13 @@ drawings.text.Text2.Font = 2
 drawings.text.Text2.Outline = true
 drawings.text.Text2.Text = crosshair.secondtext
 
-local currentLines = crosshair.lines -- Track the current number of lines
-local currentWidth = crosshair.width -- Track the current width
+local currentLines = crosshair.lines
+local currentWidth = crosshair.width
 
 local function createCrosshairLines()
     for _, line in pairs(drawings.crosshair) do
-        line[1]:Remove() -- Remove outline
-        line[2]:Remove() -- Remove inline
+        line[1]:Remove()
+        line[2]:Remove()
     end
     drawings.crosshair = {}
 
@@ -72,7 +73,7 @@ local function createCrosshairLines()
     end
 end
 
-createCrosshairLines() -- Initialize crosshair lines
+createCrosshairLines()
 
 function solve(angle, radius)
     return Vector2.new(
@@ -90,7 +91,7 @@ runservice.PostSimulation:Connect(function()
         if currentLines ~= crosshair.lines or currentWidth ~= crosshair.width then
             currentLines = crosshair.lines
             currentWidth = crosshair.width
-            createCrosshairLines() -- Recreate the lines if the count or width has changed
+            createCrosshairLines()
         end
 
         local position = (
@@ -112,10 +113,10 @@ runservice.PostSimulation:Connect(function()
             text_2.Color = crosshair.color
 
             for idx = 1, crosshair.lines do
-                local outline = drawings.crosshair[idx][1] -- Outline
-                local inline = drawings.crosshair[idx][2]  -- Inline
+                local outline = drawings.crosshair[idx][1]
+                local inline = drawings.crosshair[idx][2]
 
-                local angle = (idx - 1) * (360 / crosshair.lines) -- Distribute angles evenly
+                local angle = (idx - 1) * (360 / crosshair.lines)
                 local length = crosshair.length
 
                 if crosshair.spin then
@@ -124,8 +125,9 @@ runservice.PostSimulation:Connect(function()
                 end
 
                 if crosshair.resize then
-                    local resize_length = tick() * crosshair.resize_speed % 180
-                    length = crosshair.resize_min + math.sin(math.rad(resize_length)) * crosshair.resize_max
+                    local resize_progress = math.abs(math.sin(math.rad(_tick * crosshair.resize_speed)))
+                    local resize_length = tweenservice:GetValue(resize_progress, crosshair.resize_style, Enum.EasingDirection.InOut)
+                    length = crosshair.resize_min + resize_length * (crosshair.resize_max - crosshair.resize_min)
                 end
 
                 inline.Visible = true
@@ -141,8 +143,8 @@ runservice.PostSimulation:Connect(function()
             end
         else
             for idx = 1, crosshair.lines do
-                drawings.crosshair[idx][1].Visible = false -- Outline
-                drawings.crosshair[idx][2].Visible = false -- Inline
+                drawings.crosshair[idx][1].Visible = false
+                drawings.crosshair[idx][2].Visible = false
             end
         end
     end
