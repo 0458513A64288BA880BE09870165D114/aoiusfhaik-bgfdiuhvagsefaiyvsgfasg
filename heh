@@ -1,1 +1,9 @@
-print("elegant.hvh")
+local libraryCode = [[
+    local function printContent(name)
+        return "elegant.hvh"
+    end
+
+    return {
+        printContent = printContent
+    }
+]]
