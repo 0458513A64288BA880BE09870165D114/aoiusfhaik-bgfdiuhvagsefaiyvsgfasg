@@ -2,12 +2,14 @@ local InputService = cloneref(game:GetService('UserInputService'));
 local TextService = cloneref(game:GetService('TextService'));
 local CoreGui = cloneref(game:GetService('CoreGui'));
 local Teams = cloneref(game:GetService('Teams'));
+local Workspace = cloneref(game:GetService("Workspace"))
 local Players = cloneref(game:GetService('Players'));
 local RunService = cloneref(game:GetService('RunService'));
 local TweenService = cloneref(game:GetService('TweenService'));
 local RenderStepped = RunService.RenderStepped;
 local LocalPlayer = Players.LocalPlayer;
 local Mouse = LocalPlayer:GetMouse();
+local Camera = Workspace.CurrentCamera
 
 local ProtectGui = protectgui or (syn and syn.protect_gui) or (function() end);
 
@@ -161,16 +163,16 @@ function Library:CreateLabel(Properties, IsHud)
     return Library:Create(_Instance, Properties);
 end;
 
-function Library:MakeDraggable(Instance, Cutoff)
-    Instance.Active = true
+function Library:MakeDraggable(Frame, Cutoff)
+    Frame.Active = true
     local isDragging = false
     local ObjPos = Vector2.zero
 
-    Instance.InputBegan:Connect(function(Input)
+    Frame.InputBegan:Connect(function(Input)
         if Input.UserInputType == Enum.UserInputType.MouseButton1 then
             ObjPos = Vector2.new(
-                Mouse.X - Instance.AbsolutePosition.X,
-                Mouse.Y - Instance.AbsolutePosition.Y
+                Mouse.X - Frame.AbsolutePosition.X,
+                Mouse.Y - Frame.AbsolutePosition.Y
             )
 
             if ObjPos.Y > (Cutoff or 40) then
@@ -181,7 +183,7 @@ function Library:MakeDraggable(Instance, Cutoff)
         end
     end)
 
-    Instance.InputEnded:Connect(function(Input)
+    Frame.InputEnded:Connect(function(Input)
         if Input.UserInputType == Enum.UserInputType.MouseButton1 then
             isDragging = false
         end
@@ -191,12 +193,67 @@ function Library:MakeDraggable(Instance, Cutoff)
         if isDragging then
             local TargetPosition = UDim2.new(
                 0,
-                Mouse.X - ObjPos.X + (Instance.Size.X.Offset * Instance.AnchorPoint.X),
+                Mouse.X - ObjPos.X + (Frame.Size.X.Offset * Frame.AnchorPoint.X),
                 0,
-                Mouse.Y - ObjPos.Y + (Instance.Size.Y.Offset * Instance.AnchorPoint.Y)
+                Mouse.Y - ObjPos.Y + (Frame.Size.Y.Offset * Frame.AnchorPoint.Y)
             )
 
-            Instance.Position = Instance.Position:Lerp(TargetPosition, 0.2)
+            Frame.Position = Frame.Position:Lerp(TargetPosition, 0.2)
+        end
+    end)
+end
+
+function Library:MakeResizable(Object)
+    local Frame = Instance.new("TextButton")
+    Frame.Position = UDim2.new(1, -10, 1, -10)
+    Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Frame.Size = UDim2.new(0, 10, 0, 10)
+    Frame.BorderSizePixel = 0
+    Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Frame.Parent = Object
+    Frame.BackgroundTransparency = 0
+    Frame.Text = ""
+    Frame.ZIndex = 0
+
+    local Resizing = false 
+    local StartSize = nil
+    local Start = nil
+    local OriginalSize = Object.Size
+
+    Frame.InputBegan:Connect(function(Input)
+        if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+            Resizing = true
+            Start = Input.Position
+            StartSize = Object.Size
+        end
+    end)
+
+    Frame.InputEnded:Connect(function(Input)
+        if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+            Resizing = false
+        end
+    end)
+
+    InputService.InputChanged:Connect(function(Input)
+        if Resizing and Input.UserInputType == Enum.UserInputType.MouseMovement then
+            local ViewportX = Camera.ViewportSize.X
+            local ViewportY = Camera.ViewportSize.Y
+
+            local CurrentSize = UDim2.new(
+                StartSize.X.Scale,
+                math.clamp(
+                    StartSize.X.Offset + (Input.Position.X - Start.X),
+                    OriginalSize.X.Offset,
+                    ViewportX
+                ),
+                StartSize.Y.Scale,
+                math.clamp(
+                    StartSize.Y.Offset + (Input.Position.Y - Start.Y),
+                    OriginalSize.Y.Offset,
+                    ViewportY
+                )
+            )
+            Object.Size = CurrentSize
         end
     end)
 end
@@ -2976,7 +3033,7 @@ function Library:CreateWindow(...)
 
     if Config.Center then
         Config.AnchorPoint = Vector2.new(0.5, 0.5)
-        Config.Position = UDim2.fromScale(0.5, 0.5)
+        Config.Position = UDim2.new(0.5, -225, 0.5, -300)
     end
 
     local Window = {
@@ -2984,7 +3041,7 @@ function Library:CreateWindow(...)
     };
 
     local Outer = Library:Create('Frame', {
-        AnchorPoint = Config.AnchorPoint,
+        -- AnchorPoint = Config.AnchorPoint,
         BackgroundColor3 = Color3.new(0, 0, 0);
         BorderSizePixel = 0;
         Position = Config.Position,
@@ -2995,6 +3052,7 @@ function Library:CreateWindow(...)
     });
 
     Library:MakeDraggable(Outer, 25);
+    Library:MakeResizable(Outer)
 
     local Inner = Library:Create('Frame', {
         BackgroundColor3 = Library.MainColor;
@@ -3059,7 +3117,8 @@ function Library:CreateWindow(...)
     local TabListLayout = Library:Create('UIListLayout', {
         Padding = UDim.new(0, 7);
         FillDirection = Enum.FillDirection.Horizontal;
-        SortOrder = Enum.SortOrder.LayoutOrder;
+        HorizontalFlex = Enum.UIFlexAlignment.Fill;
+        -- SortOrder = Enum.SortOrder.LayoutOrder;
         Parent = TabArea;
     });
 
@@ -3105,7 +3164,8 @@ function Library:CreateWindow(...)
         local TabButtonOuter = Library:Create('Frame', {
             BackgroundColor3 = Library.BackgroundColor;
             BorderColor3 = Library.OutlineColor;
-            Size = UDim2.new(0, TabButtonWidth + 8 + 4, 1, 0);
+            -- Size = UDim2.new(0, TabButtonWidth + 8 + 4, 1, 0);
+            Size = UDim2.new(1, 0, 1, 0);
             ZIndex = 1;
             Parent = TabArea;
         });
