@@ -1915,7 +1915,7 @@ do
             BorderColor3 = Library.OutlineColor;
             BorderMode = Enum.BorderMode.Inset;
             Size = UDim2.new(1, 0, 1, 0);
-            ZIndex = 6;
+            ZIndex = 5;
             Parent = ToggleOuter;
         });
 
@@ -2131,6 +2131,8 @@ do
 
         function Slider:Display()
             local Suffix = Info.Suffix or '';
+
+            Slider.MaxSize = SliderInner.AbsoluteSize.X
 
             if Info.Compact then
                 DisplayLabel.Text = Info.Text .. ': ' .. Slider.Value .. Suffix
