@@ -38,6 +38,11 @@ local Library = {
     OutlineColor = Color3.fromRGB(50, 50, 50);
     RiskColor = Color3.fromRGB(228, 98, 98),
 
+    LerpSpeed = 0.2,
+
+    BlurBackground = Instance.new('BlurEffect'),
+    BlurEnabled = true,
+
     Black = Color3.new(0, 0, 0);
     Font = Enum.Font.Code,
 
@@ -198,7 +203,7 @@ function Library:MakeDraggable(Frame, Cutoff)
                 Mouse.Y - ObjPos.Y + (Frame.Size.Y.Offset * Frame.AnchorPoint.Y)
             )
 
-            Frame.Position = Frame.Position:Lerp(TargetPosition, 0.2)
+            Frame.Position = Frame.Position:Lerp(TargetPosition, Library.LerpSpeed)
         end
     end)
 end
@@ -253,7 +258,7 @@ function Library:MakeResizable(Object)
                     ViewportY
                 )
             )
-            Object.Size = Object.Size:Lerp(CurrentSize, 0.2)
+            Object.Size = Object.Size:Lerp(CurrentSize, Library.LerpSpeed)
         end
     end)
 end
@@ -923,8 +928,8 @@ do
             local CursorOuterPos = UDim2.new(ColorPicker.Sat, 0, 1 - ColorPicker.Vib, 0);
             local HueCursorPos = UDim2.new(0, 0, ColorPicker.Hue, 0);
 
-            CursorOuter.Position = CursorOuter.Position:Lerp(CursorOuterPos, 0.2);
-            HueCursor.Position = HueCursor.Position:Lerp(HueCursorPos, 0.2);
+            CursorOuter.Position = CursorOuter.Position:Lerp(CursorOuterPos, Library.LerpSpeed);
+            HueCursor.Position = HueCursor.Position:Lerp(HueCursorPos, Library.LerpSpeed);
 
             HueBox.Text = '#' .. ColorPicker.Value:ToHex()
             RgbBox.Text = table.concat({ math.floor(ColorPicker.Value.R * 255), math.floor(ColorPicker.Value.G * 255), math.floor(ColorPicker.Value.B * 255) }, ', ')
@@ -2147,7 +2152,11 @@ do
 
             local X = math.ceil(Library:MapValue(Slider.Value, Slider.Min, Slider.Max, 0, Slider.MaxSize));
             local SliderFillSize = UDim2.new(0, X, 1, 0);
-            Fill.Size = Fill.Size:Lerp(SliderFillSize, 0.2);
+            if not Info.IgnoreLerp then
+                Fill.Size = Fill.Size:Lerp(SliderFillSize, Library.LerpSpeed);
+            else
+                Fill.Size = SliderFillSize
+            end
 
             HideBorderRight.Visible = not (X == Slider.MaxSize or X == 0);
         end;
@@ -3622,11 +3631,9 @@ function Library:CreateWindow(...)
     local Toggled = false;
     local Fading = false;
 
-    getgenv().blurBKGRND = true
-    local toggleblur = Instance.new('BlurEffect')
-    toggleblur.Enabled = true
-    toggleblur.Size = 15
-    toggleblur.Parent = game.Lighting
+    Library.BlurBackground.Enabled = true
+    Library.BlurBackground.Size = 15
+    Library.BlurBackground.Parent = game.Lighting
 
     function Library:Toggle()
         if Fading then
@@ -3640,11 +3647,11 @@ function Library:CreateWindow(...)
 
         if Toggled then
             Outer.Visible = true;
-            if getgenv().blurBKGRND then
-                toggleblur.Enabled = true
+            if Library.BlurEnabled then
+                Library.BlurBackground.Enabled = true
             end
         else
-            toggleblur.Enabled = false
+            Library.BlurBackground.Enabled = false
         end;
 
         Outer.Visible = Toggled;
