@@ -253,7 +253,7 @@ function Library:MakeResizable(Object)
                     ViewportY
                 )
             )
-            Object.Size = CurrentSize
+            Object.Size = Object.Size:Lerp(CurrentSize, 0.2)
         end
     end)
 end
@@ -920,8 +920,11 @@ do
                 TransparencyCursor.Position = UDim2.new(1 - ColorPicker.Transparency, 0, 0, 0);
             end;
 
-            CursorOuter.Position = UDim2.new(ColorPicker.Sat, 0, 1 - ColorPicker.Vib, 0);
-            HueCursor.Position = UDim2.new(0, 0, ColorPicker.Hue, 0);
+            local CursorOuterPos = UDim2.new(ColorPicker.Sat, 0, 1 - ColorPicker.Vib, 0);
+            local HueCursorPos = UDim2.new(0, 0, ColorPicker.Hue, 0);
+
+            CursorOuter.Position = CursorOuter.Position:Lerp(CursorOuterPos, 0.2);
+            HueCursor.Position = HueCursor.Position:Lerp(HueCursorPos, 0.2);
 
             HueBox.Text = '#' .. ColorPicker.Value:ToHex()
             RgbBox.Text = table.concat({ math.floor(ColorPicker.Value.R * 255), math.floor(ColorPicker.Value.G * 255), math.floor(ColorPicker.Value.B * 255) }, ', ')
@@ -2143,7 +2146,8 @@ do
             end
 
             local X = math.ceil(Library:MapValue(Slider.Value, Slider.Min, Slider.Max, 0, Slider.MaxSize));
-            Fill.Size = UDim2.new(0, X, 1, 0);
+            local SliderFillSize = UDim2.new(0, X, 1, 0);
+            Fill.Size = Fill.Size:Lerp(SliderFillSize, 0.2);
 
             HideBorderRight.Visible = not (X == Slider.MaxSize or X == 0);
         end;
