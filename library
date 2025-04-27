@@ -3975,7 +3975,7 @@ function Library:CreateTargetUi(...)
                 HealthBarIndicator.Size = HealthBarIndicator.Size:Lerp(UDim2.new(math.clamp(Humanoid.Health / Humanoid.MaxHealth, 0, 1), 0, 1, 0), Library.LerpSpeed)
                 HealthBarLabel.Text = math.floor(Humanoid.Health / Humanoid.MaxHealth * 100) .. "/" .. Humanoid.MaxHealth
                 if Target.Character.BodyEffects and Target.Character.BodyEffects.Armor then
-                    ArmorBarIndicator.Size = ArmorIndicator.Size:Lerp(UDim2.new(math.clamp(Target.Character.BodyEffects.Armor.Value / 200, 0, 1), 0, 1, 0), Library.LerpSpeed)
+                    ArmorBarIndicator.Size = ArmorBarIndicator.Size:Lerp(UDim2.new(math.clamp(Target.Character.BodyEffects.Armor.Value / 200, 0, 1), 0, 1, 0), Library.LerpSpeed)
                     ArmorBarLabel.Text = math.floor(Target.Character.BodyEffects.Armor.Value / 200 * 100) .. "/" .. 200
                 else
                     ArmorBarIndicator.Size = UDim2.new(0, 0, 1, 0), Library.LerpSpeed
