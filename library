@@ -394,6 +394,21 @@ function Library:GetTextBounds(Text, Font, Size, Resolution)
     return Bounds.X, Bounds.Y
 end;
 
+local function TruncateText(display, name, font, size, width)
+    local text = display .. "(@" .. name .. ")"
+    while Library:GetTextBounds(text, font, size) > width do
+        if #display > 0 then
+            display = display:sub(1, -2)
+        elseif #name > 0 then
+            name = name:sub(1, -2)
+        else
+            break
+        end
+        text = display .. "(@" .. name .. ")"
+    end
+    return display
+end
+
 function Library:GetDarkerColor(Color)
     local H, S, V = Color3.toHSV(Color);
     return Color3.fromHSV(H, S, V / 1.5);
@@ -1179,7 +1194,7 @@ do
             Size = UDim2.new(1, 0, 0, 18);
             TextSize = 14;
             Visible = false;
-            ZIndex = 1;
+            ZIndex = 205;
             Parent = Library.KeybindContainer;
         },  true);
 
@@ -2876,7 +2891,7 @@ do
         BorderColor3 = Library.OutlineColor;
         BorderMode = Enum.BorderMode.Inset;
         Size = UDim2.new(1, 0, 1, 0);
-        ZIndex = 200;
+        ZIndex = 201;
         Parent = KeybindOuter;
     });
 
@@ -2889,7 +2904,7 @@ do
         BackgroundColor3 = Library.AccentColor;
         BorderSizePixel = 0;
         Size = UDim2.new(1, 0, 0, 1);
-        ZIndex = 200;
+        ZIndex = 202;
         Parent = KeybindOuter;
     });
 
@@ -2903,7 +2918,7 @@ do
         TextXAlignment = Enum.TextXAlignment.Left,
 
         Text = 'Keybinds';
-        ZIndex = 200;
+        ZIndex = 203;
         Parent = KeybindInner;
     });
 
@@ -2911,7 +2926,7 @@ do
         BackgroundTransparency = 1;
         Size = UDim2.new(1, 0, 1, -20);
         Position = UDim2.new(0, 0, 0, 20);
-        ZIndex = 200;
+        ZIndex = 204;
         Parent = KeybindInner;
     });
 
@@ -3970,7 +3985,7 @@ function Library:CreateTargetUi(...)
             if Target and Target.Character and Target.Character:FindFirstChild("Humanoid") and Target.Character:FindFirstChild("HumanoidRootPart") then
                 local Humanoid = Target.Character:FindFirstChild("Humanoid")
                 local HumanoidRootPart = Target.Character:FindFirstChild("HumanoidRootPart")
-                UserLabel.Text = Target.DisplayName .. "(@" .. Target.Name .. ")"
+                UserLabel.Text = TruncateText(Target.DisplayName, Target.Name, Enum.Font.Code, 14, UserLabel.AbsoluteSize.X)
                 ThumbnailInner.Image = Players:GetUserThumbnailAsync(Target.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
                 HealthBarIndicator.Size = HealthBarIndicator.Size:Lerp(UDim2.new(math.clamp(Humanoid.Health / Humanoid.MaxHealth, 0, 1), 0, 1, 0), Library.LerpSpeed)
                 HealthBarLabel.Text = math.floor(Humanoid.Health / Humanoid.MaxHealth * 100) .. "/" .. Humanoid.MaxHealth
