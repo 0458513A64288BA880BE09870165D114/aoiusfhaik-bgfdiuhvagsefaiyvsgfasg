@@ -396,14 +396,13 @@ end;
 
 function TruncateText(display, name, font, size, width)
     local suffix = "(@" .. name .. ")"
-    local dots = ".."
     local fulltext = display .. suffix
     local textwidth = Library:GetTextBounds(fulltext, font, size)
 
     if textwidth > width then
         local overratio = width / textwidth
         local charsToKeep = math.floor(#display * overratio) - 6
-        display = display:sub(1, math.max(0, charsToKeep)) .. dots
+        display = display:sub(1, math.max(0, charsToKeep)) .. ".."
     end
 
     return display .. suffix
@@ -3707,9 +3706,9 @@ function Library:CreateTargetUi(...)
     local TargetOuter = Library:Create('Frame', {
         BackgroundColor3 = Color3.new(0, 0, 0);
         BorderSizePixel = 0;
-        Position = UDim2.new(0.5, -160, 0.7, 0),
-        Size = UDim2.new(0, 320, 0, 160),
-        Visible = true;
+        Position = UDim2.new(0.5, -175, 0.7, 0),
+        Size = UDim2.new(0, 350, 0, 160),
+        Visible = false;
         ZIndex = 1;
         Parent = ScreenGui;
     });
@@ -3989,7 +3988,7 @@ function Library:CreateTargetUi(...)
                 ThumbnailInner.Image = Players:GetUserThumbnailAsync(Target.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
                 HealthBarIndicator.Size = HealthBarIndicator.Size:Lerp(UDim2.new(math.clamp(Humanoid.Health / Humanoid.MaxHealth, 0, 1), 0, 1, 0), Library.LerpSpeed)
                 HealthBarLabel.Text = math.floor(Humanoid.Health / Humanoid.MaxHealth * 100) .. "/" .. Humanoid.MaxHealth
-                if Target.Character.BodyEffects and Target.Character.BodyEffects.Armor then
+                if Target.Character:FindFirstChild("BodyEffects") and Target.Character.BodyEffects:FindFirstChild("Armor") then
                     ArmorBarIndicator.Size = ArmorBarIndicator.Size:Lerp(UDim2.new(math.clamp(Target.Character.BodyEffects.Armor.Value / 200, 0, 1), 0, 1, 0), Library.LerpSpeed)
                     ArmorBarLabel.Text = math.floor(Target.Character.BodyEffects.Armor.Value / 200 * 100) .. "/" .. 200
                 else
