@@ -3975,7 +3975,7 @@ function Library:CreateTargetUi(...)
         if not bool then
             TargetOuter.Position = TargetOuter.Position:Lerp(UDim2.new(0.5, -(TargetOuter.AbsoluteSize.X / 2), 0.7, 0), Library.LerpSpeed)
             UserLabel.Text = "display(@username)"
-            ThumbnailInner.Image = nil
+            ThumbnailInner.Image = ""
             HealthBarLabel.Text = "0/0"
             HealthBarIndicator.Size = UDim2.new(0, 0, 1, 0)
             ArmorBarLabel.Text = "0/0"
