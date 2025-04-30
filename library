@@ -3880,7 +3880,7 @@ function Library:CreateTargetUi(...)
     local HealthBarIndicator = Library:Create('Frame', {
         BackgroundColor3 = Color3.fromRGB(2, 136, 0);
         BorderSizePixel = 0;
-        Size = UDim2.new(1, 0, 1, 0);
+        Size = UDim2.new(0, 0, 1, 0);
         Position = UDim2.new(0, 0, 0, 0);
         ZIndex = 1;
         Parent = HealthBarInner;
@@ -3899,7 +3899,7 @@ function Library:CreateTargetUi(...)
         Size = UDim2.new(1, 0, 1, 0);
         Position = UDim2.new(0, 0, 0, 0);
         TextSize = 14;
-        Text = "100/100";
+        Text = "0/0";
         TextXAlignment = Enum.TextXAlignment.Center;
         ZIndex = 1;
         Parent = HealthBarInner;
@@ -3972,6 +3972,15 @@ function Library:CreateTargetUi(...)
 
     function TargetUi:Toggle(bool)
         TargetOuter.Visible = bool
+        if not bool then
+            TargetOuter.Position = TargetOuter.Position:Lerp(UDim2.new(0.5, -(TargetOuter.AbsoluteSize.X / 2), 0.7, 0), Library.LerpSpeed)
+            UserLabel.Text = "display(@username)"
+            ThumbnailInner.Image = nil
+            HealthBarLabel.Text = "0/0"
+            HealthBarIndicator.Size = UDim2.new(0, 0, 1, 0)
+            ArmorBarLabel.Text = "0/0"
+            ArmorBarIndicator.Size = UDim2.new(0, 0, 1, 0)
+        end
     end
 
     function TargetUi:Update()
@@ -3988,7 +3997,7 @@ function Library:CreateTargetUi(...)
                     ArmorBarIndicator.Size = ArmorBarIndicator.Size:Lerp(UDim2.new(math.clamp(Target.Character.BodyEffects.Armor.Value / 200, 0, 1), 0, 1, 0), Library.LerpSpeed)
                     ArmorBarLabel.Text = math.floor(Target.Character.BodyEffects.Armor.Value) .. "/" .. 200
                 else
-                    ArmorBarIndicator.Size = UDim2.new(0, 0, 1, 0), Library.LerpSpeed
+                    ArmorBarIndicator.Size = UDim2.new(0, 0, 1, 0)
                     ArmorBarLabel.Text = "0/0"
                 end
                 local position, visible = Camera:WorldToScreenPoint(HumanoidRootPart.Position)
