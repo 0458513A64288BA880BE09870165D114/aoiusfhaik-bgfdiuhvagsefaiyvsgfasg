@@ -3935,7 +3935,7 @@ function Library:CreateTargetUi(...)
     local ArmorBarIndicator = Library:Create('Frame', {
         BackgroundColor3 = Color3.fromRGB(24, 156, 193);
         BorderSizePixel = 0;
-        Size = UDim2.new(1, 0, 1, 0);
+        Size = UDim2.new(0, 0, 1, 0);
         Position = UDim2.new(0, 0, 0, 0);
         ZIndex = 1;
         Parent = ArmorBarInner;
@@ -3951,7 +3951,7 @@ function Library:CreateTargetUi(...)
     });
 
     local ArmorBarLabel = Library:CreateLabel({
-        Size = UDim2.new(0, 0, 1, 0);
+        Size = UDim2.new(1, 0, 1, 0);
         Position = UDim2.new(0, 0, 0, 0);
         TextSize = 14;
         Text = "0/0";
