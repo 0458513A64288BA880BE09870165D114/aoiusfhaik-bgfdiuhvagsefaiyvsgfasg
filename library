@@ -401,8 +401,7 @@ function TruncateText(display, name, font, size, width)
 
     if textwidth > width then
         local overratio = width / textwidth
-        local charsToKeep = math.floor(#display * overratio) - 6
-        display = display:sub(1, math.max(0, charsToKeep)) .. ".."
+        display = display:sub(1, math.max(0, 3)) .. ".."
     end
 
     return display .. suffix
@@ -3952,10 +3951,10 @@ function Library:CreateTargetUi(...)
     });
 
     local ArmorBarLabel = Library:CreateLabel({
-        Size = UDim2.new(1, 0, 1, 0);
+        Size = UDim2.new(0, 0, 1, 0);
         Position = UDim2.new(0, 0, 0, 0);
         TextSize = 14;
-        Text = "100/100";
+        Text = "0/0";
         TextXAlignment = Enum.TextXAlignment.Center;
         ZIndex = 1;
         Parent = ArmorBarInner;
@@ -3977,9 +3976,6 @@ function Library:CreateTargetUi(...)
 
     function TargetUi:Update()
         if Library.TargetUi.Enabled and Library.TargetUi.Target and Library.TargetUi.Targetting then
-            if not TargetOuter.Visible then
-                TargetUi:Toggle(true)
-            end
             local Target = Library.TargetUi.Target
             if Target and Target.Character and Target.Character:FindFirstChild("Humanoid") and Target.Character:FindFirstChild("HumanoidRootPart") then
                 local Humanoid = Target.Character:FindFirstChild("Humanoid")
@@ -4003,6 +3999,9 @@ function Library:CreateTargetUi(...)
                 else
                     TargetOuter.Position = TargetOuter.Position:Lerp(UDim2.new(0.5, -(TargetOuter.AbsoluteSize.X / 2), 0.7, 0), Library.LerpSpeed)
                 end
+            end
+            if not TargetOuter.Visible then
+                TargetUi:Toggle(true)
             end
         elseif TargetOuter.Visible then
             TargetUi:Toggle(false)
