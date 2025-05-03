@@ -331,6 +331,12 @@ function Library:AddToolTip(InfoStr, HoverInstance)
     end)
 end
 
+function Library:Tween(Object, Target)
+    local TweenInfo = TweenInfo.new(0.5 - Library.LerpSpeed, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+    local Tween = TweenService:Create(Object, TweenInfo, Target)
+    Tween:Play()
+end
+
 function Library:OnHighlight(HighlightInstance, Instance, Properties, PropertiesDefault)
     HighlightInstance.MouseEnter:Connect(function()
         local Reg = Library.RegistryMap[Instance];
@@ -945,14 +951,15 @@ do
 
             if TransparencyBoxInner then
                 TransparencyBoxInner.BackgroundColor3 = ColorPicker.Value;
-                TransparencyCursor.Position = UDim2.new(1 - ColorPicker.Transparency, 0, 0, 0);
+                TransparencyCursorPos = UDim2.new(1 - ColorPicker.Transparency, 0, 0, 0);
+                Library:Tween(TransparencyCursor, {Position = TransparencyCursorPos})
             end;
 
             local CursorOuterPos = UDim2.new(ColorPicker.Sat, 0, 1 - ColorPicker.Vib, 0);
             local HueCursorPos = UDim2.new(0, 0, ColorPicker.Hue, 0);
 
-            CursorOuter.Position = CursorOuterPos
-            HueCursor.Position = HueCursorPos
+            Library:Tween(CursorOuter, {Position = CursorOuterPos})
+            Library:Tween(HueCursor, {Position = HueCursorPos})
 
             HueBox.Text = '#' .. ColorPicker.Value:ToHex()
             RgbBox.Text = table.concat({ math.floor(ColorPicker.Value.R * 255), math.floor(ColorPicker.Value.G * 255), math.floor(ColorPicker.Value.B * 255) }, ', ')
@@ -1994,7 +2001,8 @@ do
         end
 
         function Toggle:Display()
-            ToggleInner.BackgroundColor3 = Toggle.Value and Library.AccentColor or Library.MainColor;
+            local togglecolor = Toggle.Value and Library.AccentColor or Library.MainColor;
+            Library:Tween(ToggleInner, {BackgroundColor3 = togglecolor})
             ToggleInner.BorderColor3 = Toggle.Value and Library.AccentColorDark or Library.OutlineColor;
 
             Library.RegistryMap[ToggleInner].Properties.BackgroundColor3 = Toggle.Value and 'AccentColor' or 'MainColor';
@@ -2175,7 +2183,7 @@ do
 
             local X = math.ceil(Library:MapValue(Slider.Value, Slider.Min, Slider.Max, 0, Slider.MaxSize));
             local SliderFillSize = UDim2.new(0, X, 1, 0);
-            Fill.Size = SliderFillSize
+            Library:Tween(Fill, {Size = SliderFillSize})
 
             HideBorderRight.Visible = not (X == Slider.MaxSize or X == 0);
         end;
