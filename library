@@ -3662,6 +3662,29 @@ function Library:CreateWindow(...)
     Library.BlurBackground.Size = 15
     Library.BlurBackground.Parent = game.Lighting
 
+    local CursorOuter = Library:Create('ImageLabel', {
+        BackgroundTransparency = 1;
+        Size = UDim2.new(0, 17, 0, 17);
+        Image = "rbxassetid://7205257578";
+        ImageColor3 = Color3.new(0,0,0);
+        ZIndex = 250;
+        Parent = ScreenGui;
+    });
+
+    local CursorInner = Library:Create('ImageLabel', {
+        BackgroundTransparency = 1;
+        Position = UDim2.new(0, 1, 0, 1);
+        Size = UDim2.new(1, -2, 1, -2);
+        Image = "rbxassetid://7205257578";
+        ImageColor3 = Library.AccentColor;
+        ZIndex = 250;
+        Parent = CursorOuter;
+    });
+
+    Library:AddToRegistry(CursorInner, {
+        ImageColor3 = 'AccentColor';
+    });
+
     function Library:Toggle()
         if Fading then
             return;
@@ -3675,12 +3698,15 @@ function Library:CreateWindow(...)
         if Toggled then
             Outer.Visible = true;
             if Library.BlurEnabled then
-                Library.BlurBackground.Enabled = true
-            end
+                Library.BlurBackground.Enabled = true;
+            end;
+            InputService.MouseIconEnabled = false;
         else
-            Library.BlurBackground.Enabled = false
+            Library.BlurBackground.Enabled = false;
+            InputService.MouseIconEnabled = true;
         end;
 
+        CursorOuter.Visible = Toggled;
         Outer.Visible = Toggled;
 
         Fading = false;
@@ -3695,6 +3721,11 @@ function Library:CreateWindow(...)
             task.spawn(Library.Toggle)
         end
     end))
+
+    RenderStepped:Connect(function()
+        if not CursorOuter or not CursorInner then return end
+        CursorOuter.Position = UDim2.new(0, Mouse.X, 0, Mouse.Y)
+    end)
 
     if Config.AutoShow then task.spawn(Library.Toggle) end
 
