@@ -4031,7 +4031,7 @@ function Library:CreateTargetUi(...)
                 UserLabel.Text = TruncateText(Target.DisplayName, Target.Name, Enum.Font.Code, 14, UserLabel.AbsoluteSize.X)
                 ThumbnailInner.Image = Players:GetUserThumbnailAsync(Target.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
                 HealthBarIndicator.Size = HealthBarIndicator.Size:Lerp(UDim2.new(math.clamp(Humanoid.Health / Humanoid.MaxHealth, 0, 1), 0, 1, 0), Library.LerpSpeed)
-                HealthBarLabel.Text = math.floor(Humanoid.Health / Humanoid.MaxHealth * 100) .. "/" .. Humanoid.MaxHealth
+                HealthBarLabel.Text = math.floor(Humanoid.Health / Humanoid.MaxHealth * 100) .. "/" .. math.floor(Humanoid.MaxHealth)
                 if Target.Character and Target.Character:FindFirstChild("BodyEffects") and Target.Character.BodyEffects:FindFirstChild("Armor") then
                     ArmorBarIndicator.Size = ArmorBarIndicator.Size:Lerp(UDim2.new(math.clamp(Target.Character.BodyEffects.Armor.Value / 200, 0, 1), 0, 1, 0), Library.LerpSpeed)
                     ArmorBarLabel.Text = math.floor(Target.Character.BodyEffects.Armor.Value) .. "/" .. 200
