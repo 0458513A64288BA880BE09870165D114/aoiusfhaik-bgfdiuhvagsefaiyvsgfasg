@@ -540,7 +540,7 @@ do
             BackgroundColor3 = ColorPicker.Value;
             BorderColor3 = Library:GetDarkerColor(ColorPicker.Value);
             BorderMode = Enum.BorderMode.Inset;
-            Size = UDim2.new(0, 28, 0, 14);
+            Size = UDim2.new(0, 28, 1, 0);
             ZIndex = 2;
             Parent = ToggleLabel;
         });
@@ -548,7 +548,7 @@ do
         -- Transparency image taken from https://github.com/matas3535/SplixPrivateDrawingLibrary/blob/main/Library.lua cus i'm lazy
         local CheckerFrame = Library:Create('ImageLabel', {
             BorderSizePixel = 0;
-            Size = UDim2.new(0, 27, 0, 13);
+            Size = UDim2.new(0, 27, 1, 0);
             ZIndex = 1;
             Image = 'http://www.roblox.com/asset/?id=12977615774';
             Visible = not not Info.Transparency;
@@ -1133,7 +1133,7 @@ do
         local PickOuter = Library:Create('Frame', {
             BackgroundColor3 = Color3.new(0, 0, 0);
             BorderColor3 = Color3.new(0, 0, 0);
-            Size = UDim2.new(0, 28, 0, 15);
+            Size = UDim2.new(0, 28, 1, 0);
             ZIndex = 1;
             Parent = ToggleLabel;
         });
@@ -1464,7 +1464,7 @@ do
         local Container = Groupbox.Container;
 
         local TextLabel = Library:CreateLabel({
-            Size = UDim2.new(1, -4, 0, 15);
+            Size = UDim2.new(1, -4, 0, 13);
             TextSize = 14;
             Text = Text;
             TextWrapped = DoesWrap or false,
@@ -1936,12 +1936,19 @@ do
         local Groupbox = self;
         local Container = Groupbox.Container;
 
+        local ToggleContainer = Library:Create('Frame', {
+            BackgroundTransparency = 1;
+            Size = UDim2.new(1, -4, 0, 13);
+            ZIndex = 1;
+            Parent = Container;
+        });
+
         local ToggleOuter = Library:Create('Frame', {
             BackgroundColor3 = Color3.new(0, 0, 0);
             BorderColor3 = Color3.new(0, 0, 0);
             Size = UDim2.new(0, 13, 0, 13);
             ZIndex = 1;
-            Parent = Container;
+            Parent = ToggleContainer;
         });
 
         Library:AddToRegistry(ToggleOuter, {
@@ -1963,13 +1970,13 @@ do
         });
 
         local ToggleLabel = Library:CreateLabel({
-            Size = UDim2.new(0, 216, 1, 0);
-            Position = UDim2.new(1, 6, 0, 0);
+            Size = UDim2.new(1, -19, 1, 0);
+            Position = UDim2.new(0, 19, 0, 0);
             TextSize = 14;
             Text = Info.Text;
             TextXAlignment = Enum.TextXAlignment.Left;
             ZIndex = 1;
-            Parent = ToggleInner;
+            Parent = ToggleContainer;
         });
 
         Library:Create('UIListLayout', {
