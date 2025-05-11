@@ -1,3 +1,4 @@
+
 local InputService = cloneref(game:GetService('UserInputService'));
 local TextService = cloneref(game:GetService('TextService'));
 local CoreGui = cloneref(game:GetService('CoreGui'));
@@ -4032,9 +4033,9 @@ function Library:CreateTargetUi(...)
     function TargetUi:Update()
         if Library.TargetUi.Enabled and Library.TargetUi.Target and Library.TargetUi.Targetting then
             local Target = Library.TargetUi.Target
-            if Target and Target.Character and Target.Character:FindFirstChild("Humanoid") and Target.Character:FindFirstChild("HumanoidRootPart") then
-                local Humanoid = Target.Character:FindFirstChild("Humanoid")
-                local HumanoidRootPart = Target.Character:FindFirstChild("HumanoidRootPart")
+            if Target and Target.Character and Target.Character:FindFirstChild("Humanoid") and Target.Character:FindFirstChild("UpperTorso") then
+                local Humanoid = Target.Character.Humanoid
+                local UpperTorso = Target.Character.UpperTorso
                 UserLabel.Text = TruncateText(Target.DisplayName, Target.Name, Enum.Font.Code, 14, UserLabel.AbsoluteSize.X)
                 ThumbnailInner.Image = Players:GetUserThumbnailAsync(Target.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
                 HealthBarIndicator.Size = HealthBarIndicator.Size:Lerp(UDim2.new(math.clamp(Humanoid.Health / Humanoid.MaxHealth, 0, 1), 0, 1, 0), Library.LerpSpeed)
@@ -4046,7 +4047,7 @@ function Library:CreateTargetUi(...)
                     ArmorBarIndicator.Size = UDim2.new(0, 0, 1, 0)
                     ArmorBarLabel.Text = "0/0"
                 end
-                local position, visible = Camera:WorldToScreenPoint(HumanoidRootPart.Position)
+                local position, visible = Camera:WorldToScreenPoint(UpperTorso.Position)
                 if Library.TargetUi.AttatchToTarget and visible then
                     local TargetX = position.X - (TargetOuter.AbsoluteSize.X / 2) + (Library.TargetUi.XOffset * 3)
                     local TargetY = position.Y - (TargetOuter.AbsoluteSize.Y / 2) + (Library.TargetUi.YOffset * 3)
