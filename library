@@ -1,4 +1,3 @@
-
 local InputService = cloneref(game:GetService('UserInputService'));
 local TextService = cloneref(game:GetService('TextService'));
 local CoreGui = cloneref(game:GetService('CoreGui'));
@@ -59,6 +58,8 @@ local Library = {
         XOffset = 0;
         YOffset = 50;
     };
+
+    GlowIntensity = 0.05;
 
     Signals = {};
     ScreenGui = ScreenGui;
@@ -3104,6 +3105,24 @@ function Library:CreateWindow(...)
     Library:MakeDraggable(Outer, 25);
     Library:MakeResizable(Outer)
 
+    local OuterGlow = Library:Create('ImageLabel', {
+        BackgroundTransparency = 1;
+        BorderSizePixel = 0;
+        Size = UDim2.new(1, 40, 1, 40);
+        Position = UDim2.new(0, -20, 0, -20);
+        Image = 'http://www.roblox.com/asset/?id=18245826428';
+        ImageColor3 = Library.AccentColor;
+        ImageTransparency = 1 - Library.GlowIntensity;
+        ScaleType = Enum.ScaleType.Slice;
+        SliceCenter = Rect.new(Vector2.new(21, 21), Vector2.new(79, 79));
+        ZIndex = 1;
+        Parent = Outer;
+    });
+
+    Library:AddToRegistry(OuterGlow, {
+        ImageColor3 = 'AccentColor';
+    });
+
     local Inner = Library:Create('Frame', {
         BackgroundColor3 = Library.MainColor;
         BorderColor3 = Library.OutlineColor;
@@ -3759,6 +3778,24 @@ function Library:CreateTargetUi(...)
         Parent = ScreenGui;
     });
 
+    local TargetGlow = Library:Create('ImageLabel', {
+        BackgroundTransparency = 1;
+        BorderSizePixel = 0;
+        Size = UDim2.new(1, 40, 1, 40);
+        Position = UDim2.new(0, -20, 0, -20);
+        Image = 'http://www.roblox.com/asset/?id=18245826428';
+        ImageColor3 = Library.AccentColor;
+        ImageTransparency = 1 - Library.GlowIntensity;
+        ScaleType = Enum.ScaleType.Slice;
+        SliceCenter = Rect.new(Vector2.new(21, 21), Vector2.new(79, 79));
+        ZIndex = 1;
+        Parent = TargetOuter;
+    });
+
+    Library:AddToRegistry(TargetGlow, {
+        ImageColor3 = 'AccentColor';
+    });
+
     local TargetInner = Library:Create('Frame', {
         BackgroundColor3 = Library.MainColor;
         BorderColor3 = Library.OutlineColor;
@@ -3933,6 +3970,20 @@ function Library:CreateTargetUi(...)
         Parent = HealthBarInner;
     });
 
+    local HealthBarGlow = Library:Create('ImageLabel', {
+        BackgroundTransparency = 1;
+        BorderSizePixel = 0;
+        Size = UDim2.new(1, 40, 1, 40);
+        Position = UDim2.new(0, -20, 0, -20);
+        Image = 'http://www.roblox.com/asset/?id=18245826428';
+        ImageColor3 = Color3.fromRGB(2, 136, 0);
+        ImageTransparency = 1 - Library.GlowIntensity;
+        ScaleType = Enum.ScaleType.Slice;
+        SliceCenter = Rect.new(Vector2.new(21, 21), Vector2.new(79, 79));
+        ZIndex = 1;
+        Parent = HealthBarIndicator;
+    });
+
     local HealthBarGradient = Library:Create('UIGradient', {
         Color = ColorSequence.new({
             ColorSequenceKeypoint.new(0, Color3.fromRGB(2, 136, 0)),
@@ -3986,6 +4037,20 @@ function Library:CreateTargetUi(...)
         Position = UDim2.new(0, 0, 0, 0);
         ZIndex = 1;
         Parent = ArmorBarInner;
+    });
+
+    local ArmorBarGlow = Library:Create('ImageLabel', {
+        BackgroundTransparency = 1;
+        BorderSizePixel = 0;
+        Size = UDim2.new(1, 40, 1, 40);
+        Position = UDim2.new(0, -20, 0, -20);
+        Image = 'http://www.roblox.com/asset/?id=18245826428';
+        ImageColor3 = Color3.fromRGB(24, 156, 193);
+        ImageTransparency = 1 - Library.GlowIntensity;
+        ScaleType = Enum.ScaleType.Slice;
+        SliceCenter = Rect.new(Vector2.new(21, 21), Vector2.new(79, 79));
+        ZIndex = 1;
+        Parent = ArmorBarIndicator;
     });
 
     local ArmorBarGradient = Library:Create('UIGradient', {
@@ -4073,6 +4138,12 @@ function Library:CreateTargetUi(...)
     TargetUi.Holder = TargetOuter
 
     return TargetUi
+end
+
+function Library:ChangeGlow(num)
+    ArmorBarGlow.ImageTransparency = 1 - num
+    HealthBarGlow.ImageTransparency = 1 - num
+    OuterGlow.ImageTransparency = 1 - num
 end
 
 local function OnPlayerChange()
