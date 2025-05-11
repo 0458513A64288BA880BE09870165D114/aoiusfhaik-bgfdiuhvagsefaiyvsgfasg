@@ -1,3 +1,4 @@
+
 local InputService = cloneref(game:GetService('UserInputService'));
 local TextService = cloneref(game:GetService('TextService'));
 local CoreGui = cloneref(game:GetService('CoreGui'));
@@ -64,6 +65,11 @@ local Library = {
     Signals = {};
     ScreenGui = ScreenGui;
 };
+
+local OuterGlow
+local TargetGlow
+local HealthBarGlow
+local ArmorBarGlow
 
 local RainbowStep = 0
 local Hue = 0
@@ -3105,7 +3111,7 @@ function Library:CreateWindow(...)
     Library:MakeDraggable(Outer, 25);
     Library:MakeResizable(Outer)
 
-    local OuterGlow = Library:Create('ImageLabel', {
+    OuterGlow = Library:Create('ImageLabel', {
         BackgroundTransparency = 1;
         BorderSizePixel = 0;
         Size = UDim2.new(1, 40, 1, 40);
@@ -3778,7 +3784,7 @@ function Library:CreateTargetUi(...)
         Parent = ScreenGui;
     });
 
-    local TargetGlow = Library:Create('ImageLabel', {
+    TargetGlow = Library:Create('ImageLabel', {
         BackgroundTransparency = 1;
         BorderSizePixel = 0;
         Size = UDim2.new(1, 40, 1, 40);
@@ -3970,7 +3976,7 @@ function Library:CreateTargetUi(...)
         Parent = HealthBarInner;
     });
 
-    local HealthBarGlow = Library:Create('ImageLabel', {
+    HealthBarGlow = Library:Create('ImageLabel', {
         BackgroundTransparency = 1;
         BorderSizePixel = 0;
         Size = UDim2.new(1, 40, 1, 40);
@@ -4039,7 +4045,7 @@ function Library:CreateTargetUi(...)
         Parent = ArmorBarInner;
     });
 
-    local ArmorBarGlow = Library:Create('ImageLabel', {
+    ArmorBarGlow = Library:Create('ImageLabel', {
         BackgroundTransparency = 1;
         BorderSizePixel = 0;
         Size = UDim2.new(1, 40, 1, 40);
@@ -4143,6 +4149,7 @@ end
 function Library:ChangeGlow(num)
     ArmorBarGlow.ImageTransparency = 1 - num
     HealthBarGlow.ImageTransparency = 1 - num
+    TargetGlow.ImageTransparency = 1 - num
     OuterGlow.ImageTransparency = 1 - num
 end
 
