@@ -3114,8 +3114,8 @@ function Library:CreateWindow(...)
     OuterGlow = Library:Create('ImageLabel', {
         BackgroundTransparency = 1;
         BorderSizePixel = 0;
-        Size = UDim2.new(1, 40, 1, 40);
-        Position = UDim2.new(0, -20, 0, -20);
+        Size = UDim2.new(1, 41, 1, 41);
+        Position = UDim2.new(0, -21, 0, -21);
         Image = 'http://www.roblox.com/asset/?id=18245826428';
         ImageColor3 = Library.AccentColor;
         ImageTransparency = 1 - Library.GlowIntensity;
@@ -3787,8 +3787,8 @@ function Library:CreateTargetUi(...)
     TargetGlow = Library:Create('ImageLabel', {
         BackgroundTransparency = 1;
         BorderSizePixel = 0;
-        Size = UDim2.new(1, 40, 1, 40);
-        Position = UDim2.new(0, -20, 0, -20);
+        Size = UDim2.new(1, 41, 1, 41);
+        Position = UDim2.new(0, -21, 0, -21);
         Image = 'http://www.roblox.com/asset/?id=18245826428';
         ImageColor3 = Library.AccentColor;
         ImageTransparency = 1 - Library.GlowIntensity;
@@ -3896,7 +3896,7 @@ function Library:CreateTargetUi(...)
     });
 
     local TargetBoxLabel = Library:CreateLabel({
-        Size = UDim2.new(1, 0, 0, 18);
+        Size = UDim2.new(1, -8, 0, 18);
         Position = UDim2.new(0, 4, 0, 2);
         TextSize = 14;
         Text = "Info";
@@ -4147,10 +4147,10 @@ function Library:CreateTargetUi(...)
 end
 
 function Library:ChangeGlow(num)
-    ArmorBarGlow.ImageTransparency = 1 - num
-    HealthBarGlow.ImageTransparency = 1 - num
-    TargetGlow.ImageTransparency = 1 - num
-    OuterGlow.ImageTransparency = 1 - num
+    ArmorBarGlow.ImageTransparency = 1 - (num / 2)
+    HealthBarGlow.ImageTransparency = 1 - (num / 2)
+    TargetGlow.ImageTransparency = 1 - (num / 2)
+    OuterGlow.ImageTransparency = 1 - (num / 2)
 end
 
 local function OnPlayerChange()
