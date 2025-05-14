@@ -6320,7 +6320,7 @@ local TeleportCheck = false
 Players.LocalPlayer.OnTeleport:Connect(function(State)
 	if KeepInfYield and (not TeleportCheck) and queueteleport then
 		TeleportCheck = true
-		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/B972226B51FF76EE2613DBCB452D96EE/aoiusfhaik-bgfdiuhvagsefaiyvsgfasg/refs/heads/main/infishityield'))()")
+		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/B972226B51FF76EE2613DBCB452D96EE/ED5CF81AE661CC0E97F6849A2C2DFFF7/refs/heads/main/infishityield'))()")
 	end
 end)
 
