@@ -188,37 +188,37 @@ end;
 
 function Library:MakeDraggable(Frame, Cutoff)
     Frame.Active = true
-    local isDragging = false
-    local ObjPos = Vector2.zero
+    local Dragging = false
+    local FramePosition = Vector2.zero
 
     Frame.InputBegan:Connect(function(Input)
         if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-            ObjPos = Vector2.new(
+            FramePosition = Vector2.new(
                 Mouse.X - Frame.AbsolutePosition.X,
                 Mouse.Y - Frame.AbsolutePosition.Y
             )
 
-            if ObjPos.Y > (Cutoff or 40) then
+            if FramePosition.Y > (Cutoff or 40) then
                 return
             end
 
-            isDragging = true
+            Dragging = true
         end
     end)
 
     Frame.InputEnded:Connect(function(Input)
         if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-            isDragging = false
+            Dragging = false
         end
     end)
 
-    RenderStepped:Connect(function()
-        if isDragging then
+    InputService.InputChanged:Connect(function(Input)
+        if Dragging then
             local TargetPosition = UDim2.new(
                 0,
-                Mouse.X - ObjPos.X + (Frame.Size.X.Offset * Frame.AnchorPoint.X),
+                Mouse.X - FramePosition.X + (Frame.Size.X.Offset * Frame.AnchorPoint.X),
                 0,
-                Mouse.Y - ObjPos.Y + (Frame.Size.Y.Offset * Frame.AnchorPoint.Y)
+                Mouse.Y - FramePosition.Y + (Frame.Size.Y.Offset * Frame.AnchorPoint.Y)
             )
 
             Frame.Position = Frame.Position:Lerp(TargetPosition, Library.LerpSpeed)
