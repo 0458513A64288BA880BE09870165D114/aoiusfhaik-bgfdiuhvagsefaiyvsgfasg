@@ -1,43 +1,11 @@
-local getinfo = getinfo or debug.getinfo
-local a = false
-local b = {}
-local c, d
-setthreadidentity(2)
-for e, f in getgc(true) do
-  if type(f) == "table" then
-    local g = rawget(f, "Detected")
-    local h = rawget(f, "Kill")
-    if type(g) == "function" and not c then
-      c = g
-      local i = hookfunction(c, function(j, k, l)
-        if j ~= "_" then
-          if a then
-            warn("Flagged")
-          end
+for Key, Object in pairs(getgc(true)) do
+    if type(Object) == "table" then
+        setreadonly(Object, false)
+        local indexInstance = rawget(Object, "indexInstance")
+        if type(indexInstance) == "table" and indexInstance[1] == "kick" then
+            setreadonly(indexInstance, false)
+            rawset(Object, "Table", {"kick", function() coroutine.yield() end})
+            break
         end
-        return true
-      end)
-      table.insert(b, c)
     end
-    if rawget(f, "Variables") and rawget(f, "Process") and type(h) == "function" and not d then
-      d = h
-      local i = hookfunction(d, function(k)
-        if a then
-          warn("Killed")
-        end
-      end)
-      table.insert(b, d)
-    end
-  end
 end
-local i = hookfunction(getrenv().debug.info, newcclosure(function(...)
-  local m, k = ...
-  if c and m == c then
-    if a then
-      warn("Sanity Check")
-    end
-    return coroutine.yield(coroutine.running())
-  end
-  return i(...)
-end))
-setthreadidentity(8)
