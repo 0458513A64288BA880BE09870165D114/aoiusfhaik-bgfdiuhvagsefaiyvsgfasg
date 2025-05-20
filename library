@@ -2926,7 +2926,7 @@ do
         BorderSizePixel = 0;
         Size = UDim2.new(1, 0, 0, 1);
         ZIndex = 202;
-        Parent = KeybindOuter;
+        Parent = KeybindInner;
     });
 
     Library:AddToRegistry(ColorFrame, {
@@ -3700,7 +3700,7 @@ function Library:CreateWindow(...)
         Size = UDim2.new(0, 17, 0, 17);
         Image = "rbxassetid://7205257578";
         ImageColor3 = Color3.new(0,0,0);
-        ZIndex = 250;
+        ZIndex = 9e9;
         Parent = ScreenGui;
     });
 
@@ -3710,7 +3710,7 @@ function Library:CreateWindow(...)
         Size = UDim2.new(1, -2, 1, -2);
         Image = "rbxassetid://7205257578";
         ImageColor3 = Library.AccentColor;
-        ZIndex = 250;
+        ZIndex = 9e9;
         Parent = CursorOuter;
     });
 
