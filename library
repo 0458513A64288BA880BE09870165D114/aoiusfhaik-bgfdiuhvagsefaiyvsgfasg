@@ -4159,6 +4159,8 @@ function Library:ChangeGlow(num)
     HealthBarGlow.ImageTransparency = 1 - (num / 2)
     TargetGlow.ImageTransparency = 1 - (num / 2)
     OuterGlow.ImageTransparency = 1 - (num / 2)
+    KeybindGlow.ImageTransparency = 1 - (num / 2)
+    WatermarkGlow.ImageTransparency = 1 - (num / 2)
 end
 
 local function OnPlayerChange()
