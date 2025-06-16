@@ -1,4 +1,3 @@
-
 local InputService = cloneref(game:GetService('UserInputService'));
 local TextService = cloneref(game:GetService('TextService'));
 local CoreGui = cloneref(game:GetService('CoreGui'));
@@ -2823,6 +2822,7 @@ do
     });
 
     local WatermarkOuter = Library:Create('Frame', {
+        BackgroundColor3 = Library.MainColor;
         BorderColor3 = Color3.new(0, 0, 0);
         Position = UDim2.new(0, 170, 0, -36);
         Size = UDim2.new(0, 213, 0, 20);
@@ -2831,11 +2831,29 @@ do
         Parent = ScreenGui;
     });
 
+    WatermarkGlow = Library:Create('ImageLabel', {
+        BackgroundTransparency = 1;
+        BorderSizePixel = 0;
+        Size = UDim2.new(1, 41, 1, 41);
+        Position = UDim2.new(0, -21, 0, -21);
+        Image = 'http://www.roblox.com/asset/?id=18245826428';
+        ImageColor3 = Library.AccentColor;
+        ImageTransparency = 1 - Library.GlowIntensity;
+        ScaleType = Enum.ScaleType.Slice;
+        SliceCenter = Rect.new(Vector2.new(21, 21), Vector2.new(79, 79));
+        ZIndex = 201;
+        Parent = WatermarkOuter;
+    });
+
+    Library:AddToRegistry(WatermarkGlow, {
+        ImageColor3 = 'AccentColor';
+    });
+
     local WatermarkInner = Library:Create('Frame', {
         BackgroundColor3 = Library.MainColor;
         BorderColor3 = Library.OutlineColor;
-        BorderMode = Enum.BorderMode.Inset;
-        Size = UDim2.new(1, 0, 1, 0);
+        Size = UDim2.new(1, -2, 1, -2);
+        Position = UDim2.new(0, 1, 0, 1);
         ZIndex = 200;
         Parent = WatermarkOuter;
     });
@@ -2849,38 +2867,11 @@ do
         BorderSizePixel = 0;
         Size = UDim2.new(1, 0, 0, 1);
         ZIndex = 200;
-        Parent = WatermarkOuter;
+        Parent = WatermarkInner;
     });
 
     Library:AddToRegistry(WatermarkAccent, {
         BackgroundColor3 = 'AccentColor';
-    });
-
-    local InnerFrame = Library:Create('Frame', {
-        BackgroundColor3 = Color3.new(1, 1, 1);
-        BorderSizePixel = 0;
-        Position = UDim2.new(0, 1, 0, 1);
-        Size = UDim2.new(1, -2, 1, -2);
-        ZIndex = 200;
-        Parent = WatermarkInner;
-    });
-
-    local Gradient = Library:Create('UIGradient', {
-        Color = ColorSequence.new({
-            ColorSequenceKeypoint.new(0, Library:GetDarkerColor(Library.MainColor)),
-            ColorSequenceKeypoint.new(1, Library.MainColor),
-        });
-        Rotation = -90;
-        Parent = InnerFrame;
-    });
-
-    Library:AddToRegistry(Gradient, {
-        Color = function()
-            return ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Library:GetDarkerColor(Library.MainColor)),
-                ColorSequenceKeypoint.new(1, Library.MainColor),
-            });
-        end
     });
 
     local WatermarkLabel = Library:CreateLabel({
@@ -2889,14 +2880,12 @@ do
         TextSize = 14;
         TextXAlignment = Enum.TextXAlignment.Left;
         ZIndex = 200;
-        Parent = InnerFrame;
+        Parent = WatermarkInner;
     });
 
     Library.Watermark = WatermarkOuter;
     Library.WatermarkText = WatermarkLabel;
     Library:MakeDraggable(Library.Watermark);
-
-
 
     local KeybindOuter = Library:Create('Frame', {
         AnchorPoint = Vector2.new(0, 0.5);
@@ -2906,6 +2895,24 @@ do
         Visible = false;
         ZIndex = 200;
         Parent = ScreenGui;
+    });
+
+    KeybindGlow = Library:Create('ImageLabel', {
+        BackgroundTransparency = 1;
+        BorderSizePixel = 0;
+        Size = UDim2.new(1, 41, 1, 41);
+        Position = UDim2.new(0, -21, 0, -21);
+        Image = 'http://www.roblox.com/asset/?id=18245826428';
+        ImageColor3 = Library.AccentColor;
+        ImageTransparency = 1 - Library.GlowIntensity;
+        ScaleType = Enum.ScaleType.Slice;
+        SliceCenter = Rect.new(Vector2.new(21, 21), Vector2.new(79, 79));
+        ZIndex = 205;
+        Parent = KeybindOuter;
+    });
+
+    Library:AddToRegistry(KeybindGlow, {
+        ImageColor3 = 'AccentColor';
     });
 
     local KeybindInner = Library:Create('Frame', {
